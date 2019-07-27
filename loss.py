@@ -9,6 +9,7 @@ class loss():
 	def __call__(self, data, output, latent, y):
 		# compute for reconstruction loss
 		recon = self.recon_loss(data,output)
+		# compute latent loss
 		latent_loss = (latent[0][0] - y)**2
 		print("latent_loss: ", latent_loss)
 		print(recon)

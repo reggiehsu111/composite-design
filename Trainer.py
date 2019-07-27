@@ -7,10 +7,14 @@ class Trainer():
 	def __init__(self, COMdataset, Model, optimizer, checkpoint_dir, batch_size):
 		self.COMdataset = COMdataset
 		self.model = self.Model
+		# optimizer to perform backpropagation
 		self.optimizer = optimizer
+		# directory to save the model
 		self.checkpoint_dir = checkpoint_dir
+		# gpu or cpu
 		self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 		self.model.to(self.device)
+		# split the dataset into training, validating, and testing sets
 		self.train_val_test = [0.7,0.1,0.2]
 		self.batch_size = batch_size
 		# loss
@@ -53,7 +57,7 @@ class Trainer():
 				# backpropagate
 				total_loss.backward()
 
-			 # Eval: get train, val and test accuracies
+			# Eval: get train, val and test accuracies
             training_acc, training_loss = self._compute_metrics(self.train_DataLoader)
             validate_acc, validation_loss = self._compute_metrics(self.val_DataLoader)
             sys.stdout.write(" train acc: {:.3f}, valid acc: {:.3f}".format(
@@ -64,22 +68,15 @@ class Trainer():
 	                saved_model_testing_acc = testing_acc
 	                self._save_checkpoint(epoch, training_loss)
 
-	  def _compute_metrics(self, input_DataLoader):
-        # torch.no_grad() saves memory and increases computation speed
-        with torch.no_grad():
-            self.model.eval()
-            total_metrics = 0
-            total_loss = 0
-            for batch_idx, (x, y) in enumerate(input_DataLoader):
-                x, y = x.to(self.device), y.to(self.device)
-                x = x.view((-1,1,3750))
-                outputs = self.model(x)
-                loss = self.criterion(outputs, y)
-                outputs_class = np.argmax(outputs.cpu().numpy(), axis=1)
-                acc = accuracy(outputs_class, y.cpu().numpy())
-                total_metrics += acc
-                total_loss += loss.cpu().item()
-            return total_metrics / len(input_DataLoader.dataset),  total_loss / len(input_DataLoader.dataset)
+  def _compute_metrics(self, input_DataLoader):
+    # torch.no_grad() saves memory and increases computation speed
+    with torch.no_grad():
+        self.model.eval()
+        total_metrics = 0
+        total_loss = 0
+        for batch_idx, (x, y) in enumerate(input_DataLoader):
+         pass
+        return total_metrics / len(input_DataLoader.dataset),  total_loss / len(input_DataLoader.dataset)
 
 
 

@@ -2,6 +2,7 @@ from torch.utils.data import DataLoader
 import torch.optim as optim
 from dataloader import *
 from model import *
+from Trainer import Trainer
 
 
 def main():
